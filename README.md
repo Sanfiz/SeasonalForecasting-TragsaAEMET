@@ -3,9 +3,9 @@
 ## Project Overview
 This repository contains work under the **Tragsatec-AEMET contract (2024-2025)**.
 
-Department: **AEMET Development and Applications Department**. 
+**AEMET Development and Applications Department**. _Departamento de Desarollo y Aplicaciones_
 
-Area: **Climate Assessment and Modeling Area (AEMC)**.
+**Climate Assessment and Modeling Area (AEMC)**. _Area Evaluación y Modelización del Clima_
 
 ## Repository Structure
 - **/SpanishBasins**:  
