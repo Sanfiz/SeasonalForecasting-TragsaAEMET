@@ -8,5 +8,5 @@ Department: **AEMET Development and Applications Department**.
 Area: **Climate Assessment and Modeling Area (AEMC)**.
 
 ## Repository Structure
-- **/basins**:  
+- **/SpanishBasins**:  
   *--- Under Construction ---*
