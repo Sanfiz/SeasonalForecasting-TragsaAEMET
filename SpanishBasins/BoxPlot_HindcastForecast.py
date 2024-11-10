@@ -3,29 +3,23 @@ This script processes forecast and hindcast data from the ECMWF SEAS5 model
 to calculate and visualise precipitation anomalies for Spanish basins.
 
 STEP1. Define main characteristics of the input data
-   - Sets up the basic configuration for the ECMWF SEAS5 model, including forecast months, system type, and initialization details.
-   - Iterates over some forecast year (2022, 2023, 2024)
+    1.1 Sets up the basic configuration for the ECMWF SEAS5 model.
+    1.2 Iterates over some forecast year (2022, 2023, 2024)
 
-STEP2. Load Hindcast and Forecast Data
-   - Opens hindcast and forecast files in GRIB format and sets up the time and coordinate system.
-
+STEP2. Load Hindcast and Forecast Data (GRIB format) and sets up the time and coordinate system.
 
 STEP3. Make some computations in the data
     3.1 Convert Precipitation Units from m/s to l/m² 
-
     3.2 Calculate Winter Precipitation Mean an extended winter period (from November to March).
-
-    3.3 Reshape Hindcast Dimensions to make them compatible for anomaly calculations.
+    3.3 Reshape Hindcast Dimensions to make them compatible with anomaly calculations.
 
 STEP4. Compute Precipitation Anomalies for each basin by comparing hindcast and forecast values.
 
-STEP5. Compute and Save Statistics
-   - Calculates percentiles and central tendency statistics for each anomaly period and saves them in a CSV file.
+STEP5. Compute and Save Statistics for each anomaly period and saves them in a CSV file.
 
 STEP6. Visualise Results
-   - Generates a boxplot for precipitation anomalies and a table with calculated statistics, saving the visualization as an image.
+ - Generates a boxplot for precipitation anomalies and a table with calculated statistics.
 
-The script is designed to process each basin individually, iterating over the configured years and applying the workflow described above.
 """
 
 
@@ -46,8 +40,9 @@ warnings.filterwarnings('ignore')
 
 ##########################################################
 #STEP1. Define main characteristics of the input data
+print('STEP1. Define main characteristics of the input data')
 
-# define model
+# 1.1 Sets up the basic configuration for the ECMWF SEAS5 model.
 institution = 'ECWMF'
 name = 'SEAS5'
 startmonth = 11
@@ -57,8 +52,6 @@ model = 'ecmwf'
 system = '51'
 fcmonth = 2
 
-
-# Here we save the configuration
 config = dict(
     list_vars = ['total_precipitation'],
     fcy = year,
@@ -71,12 +64,14 @@ config = dict(
 )
 
 
-# Loop through each forecast year
+# 1.2 Iterates over some forecast year (2022, 2023, 2024)
 for forecast_year in config['fcy']:
-    print(f"Processing forecast year: {forecast_year}")
+    
 
     ####################################################################
     # STEP2. Load Hindcast and Forecast Data
+    print("STEP2. Load Hindcast and Forecast Data")
+    print(f"Forecast year: {forecast_year}")
 
     # paths grib of 1º horizontal resolution
     HINDDIR="/MASIVO/cly/Seasonal_Verification/1-Sf_variables/data"
@@ -100,7 +95,7 @@ for forecast_year in config['fcy']:
     # Open forecast
     fcst_bname = f"{config['origin']}_s{config['system']}_stmonth{config['start_month']:02d}_forecast{forecast_year}_monthly"
     fcst_fname = f'{FOREDIR}/{fcst_bname}.grib'
-    print(f"Forecast file name for year {forecast_year}: {forecast_filename}")
+    print(f"Forecast file name for year {forecast_year}: {fcst_bname}")
     st_dim_name = 'time' if not config.get('isLagged',False) else 'indexing_time'
     fcst = xr.open_dataset(fcst_fname,engine='cfgrib', backend_kwargs=dict(time_dims=('forecastMonth', st_dim_name)))
     fcst = fcst.chunk({'forecastMonth':1, 'latitude':'auto', 'longitude':'auto'})
@@ -114,6 +109,7 @@ for forecast_year in config['fcy']:
     ####################################################################
     # STEP3. Make some computations in the data
 
+    # 3.1 Convert Precipitation Units from m/s to l/m²
     def convert_to_monthly_precipitation(data, month, leap_year=False):
         """
         This function converts precipitation units from m/s to l/m^2.
@@ -141,20 +137,23 @@ for forecast_year in config['fcy']:
     # fcst-Dimensions: (number: 51, forecastMonth: 6, lat: 180, lon: 360)
 
 
-    # 3.1 Winter average over the course of 6 months (NDJFM?)
+    # 3.2 Calculate Winter Precipitation Mean an extended winter period (from November to March).
     winter_hcst = hcst['tprate'].mean(dim='forecastMonth') 
     winter_fcst = fcst['tprate'].mean(dim='forecastMonth')
 
     # winter_hcst-Dimensions: (number: 25, start_date: 24, lat: 46, lon: 91)
     # winter_fcst-Dimensions: (number: 51, lat: 180, lon: 360)
 
-    # 3.2 Merge the first two colummns of the hindcast
+    # 3.3 Reshape Hindcast Dimensions to make them compatible with anomaly calculations.
     winter_hcst_stacked = winter_hcst.stack(new_dim=("number", "start_date")).T
 
     # winter_hcst_stacked-Dimensions: (new_dim: 600, lon: 91, lat: 46)
 
 
-    # path csv
+    ####################################################################
+    # STEP4. Compute Precipitation Anomalies
+
+    
     path_to_csv_files = '/sclim/cly/basins/results-basins'
 
     # Loop over the basins
@@ -165,13 +164,6 @@ for forecast_year in config['fcy']:
         print(f"Processing file: {file_path}")
 
         df = pd.read_csv(file_path)
-        
-        ####################################################################
-        # STEP4. Compute Precipitation Anomalies
-
-        winter_hcst_stacked = winter_hcst.stack(new_dim=("number", "start_date")).T
-
-        # winter_hcst_stacked-Dimensions: (new_dim: 600, lon: 91, lat: 46)
 
         if 'x_grid' in df.columns and 'y_grid' in df.columns:
 
