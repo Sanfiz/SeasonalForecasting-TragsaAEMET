@@ -8,4 +8,6 @@ The followind datasets are used in this project:
 
 
 ### 2. Scripts
-- BoxPlot_HindcastForecast.py: processes forecast and hindcast data to calculate and visualise precipitation anomalies for Spanish basins.
+- BoxPlot_HindcastForecast.py: processes forecast and hindcast data to calculate and visualise precipitation anomalies for Spanish basins during the extended winter.
+- boxplot_NDJFM.py
+- subplot_basins.py
