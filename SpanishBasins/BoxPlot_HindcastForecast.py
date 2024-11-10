@@ -1,3 +1,34 @@
+"""
+This script processes forecast and hindcast data from the ECMWF SEAS5 model
+to calculate and visualise precipitation anomalies for Spanish basins.
+
+STEP1. Define main characteristics of the input data
+   - Sets up the basic configuration for the ECMWF SEAS5 model, including forecast months, system type, and initialization details.
+   - Iterates over some forecast year (2022, 2023, 2024)
+
+STEP2. Load Hindcast and Forecast Data
+   - Opens hindcast and forecast files in GRIB format and sets up the time and coordinate system.
+
+
+STEP3. Make some computations in the data
+    3.1 Convert Precipitation Units from m/s to l/m² 
+
+    3.2 Calculate Winter Precipitation Mean an extended winter period (from November to March).
+
+    3.3 Reshape Hindcast Dimensions to make them compatible for anomaly calculations.
+
+STEP4. Compute Precipitation Anomalies for each basin by comparing hindcast and forecast values.
+
+STEP5. Compute and Save Statistics
+   - Calculates percentiles and central tendency statistics for each anomaly period and saves them in a CSV file.
+
+STEP6. Visualise Results
+   - Generates a boxplot for precipitation anomalies and a table with calculated statistics, saving the visualization as an image.
+
+The script is designed to process each basin individually, iterating over the configured years and applying the workflow described above.
+"""
+
+
 import os
 import sys
 from dotenv import load_dotenv
@@ -13,6 +44,8 @@ import warnings
 warnings.filterwarnings('ignore')
 
 
+##########################################################
+#STEP1. Define main characteristics of the input data
 
 # define model
 institution = 'ECWMF'
@@ -43,14 +76,14 @@ for forecast_year in config['fcy']:
     print(f"Processing forecast year: {forecast_year}")
 
     ####################################################################
-    # STEP1: Open hindcast and forecast files
+    # STEP2. Load Hindcast and Forecast Data
 
-    # paths para los grib de 1º
+    # paths grib of 1º horizontal resolution
     HINDDIR="/MASIVO/cly/Seasonal_Verification/1-Sf_variables/data"
     FOREDIR="/MASIVO/cly/Forecast/1-Default_forecast/grib-data"
 
 
-    # Open climatology: ecmwf_s51_stmonth11_hindcast1993-2016_monthly.grib
+    # Open climatology
     hcst_bname = '{origin}_s{system}_stmonth{start_month:02d}_hindcast{hcstarty}-{hcendy}_monthly'.format(**config)
     hcst_fname = f'{HINDDIR}/{hcst_bname}.grib'
     st_dim_name = 'time' if not config.get('isLagged',False) else 'indexing_time'
@@ -65,8 +98,9 @@ for forecast_year in config['fcy']:
 
 
     # Open forecast
-    fcst_bname = '{origin}_s{system}_stmonth{start_month:02d}_forecast{fcy}_monthly_tprate'.format(**config)
+    fcst_bname = f"{config['origin']}_s{config['system']}_stmonth{config['start_month']:02d}_forecast{forecast_year}_monthly"
     fcst_fname = f'{FOREDIR}/{fcst_bname}.grib'
+    print(f"Forecast file name for year {forecast_year}: {forecast_filename}")
     st_dim_name = 'time' if not config.get('isLagged',False) else 'indexing_time'
     fcst = xr.open_dataset(fcst_fname,engine='cfgrib', backend_kwargs=dict(time_dims=('forecastMonth', st_dim_name)))
     fcst = fcst.chunk({'forecastMonth':1, 'latitude':'auto', 'longitude':'auto'})
@@ -78,7 +112,7 @@ for forecast_year in config['fcy']:
     fcst = fcst.assign_coords(valid_time=vt)
 
     ####################################################################
-    # STEP2: Convert units of precipitation
+    # STEP3. Make some computations in the data
 
     def convert_to_monthly_precipitation(data, month, leap_year=False):
         """
@@ -106,8 +140,6 @@ for forecast_year in config['fcy']:
     # hcst-Dimensions: (number: 25, forecastMonth: 6, start_date: 24, lat: 46, lon: 91)
     # fcst-Dimensions: (number: 51, forecastMonth: 6, lat: 180, lon: 360)
 
-    ####################################################################
-    #STEP3: Operate over the gribs
 
     # 3.1 Winter average over the course of 6 months (NDJFM?)
     winter_hcst = hcst['tprate'].mean(dim='forecastMonth') 
@@ -125,18 +157,17 @@ for forecast_year in config['fcy']:
     # path csv
     path_to_csv_files = '/sclim/cly/basins/results-basins'
 
-    # Define el rango de las cuencas
+    # Loop over the basins
     for i in range(1, 26):
-        # Define el nombre y la ruta del archivo CSV de entrada
+
         file_name = f"grid_points_within_{i}.csv"
         file_path = os.path.join(path_to_csv_files, file_name)
         print(f"Processing file: {file_path}")
 
-        # Verifica si el archivo existe
-        #if os.path.exists(file_path):
-        # Carga el archivo CSV
         df = pd.read_csv(file_path)
-
+        
+        ####################################################################
+        # STEP4. Compute Precipitation Anomalies
 
         winter_hcst_stacked = winter_hcst.stack(new_dim=("number", "start_date")).T
 
@@ -173,6 +204,9 @@ for forecast_year in config['fcy']:
         hindcast_anomaly_basinmean=hindcast_anomaly.mean(axis=0)
         forecast_anomaly_basinmean=forecast_anomaly.mean(axis=0)
 
+        ####################################################################
+        # STEP5. Compute and Save Statistics
+
         # Compute statistics for hindcast and forecast anomalies
         hindcast_stats = {
             "95th Percentile": np.percentile(hindcast_anomaly_basinmean, 95),
@@ -192,19 +226,20 @@ for forecast_year in config['fcy']:
 
         # Combine statistics into a DataFrame for easy display in the table
         stats_df = pd.DataFrame({
-            "Reference 1993-2016": hindcast_stats,
-            "Forecast 2024/2025": forecast_stats
-        })
+            f"Reference 1993-2016": hindcast_stats,
+            f"Forecast {forecast_year}/{forecast_year + 1}": forecast_stats})
 
         # Round to two decimal places for display
         stats_df = stats_df.round(2)
 
         # Save the statistics to a CSV file
         output_results = '/sclim/cly/basins/results-basins/'
-        output_csv = f'{output_results}HindcastForecast_stats_basin_{i}_ECWMF_SEAS5_NDJFM_{anho}.csv'
+        output_csv = f'{output_results}HindcastForecast_stats_basin_{i}_ECWMF_SEAS5_NDJFM_{forecast_year}.csv'
         stats_df.to_csv(output_csv, index_label="Statistic")
         print(f"Statistics saved at {output_csv}")
 
+        ####################################################################
+        #STEP6. Visualise Results
         # Create a figure with subplots: one for the boxplot and one for the statistics table
         fig, (ax_box, ax_table) = plt.subplots(1, 2, figsize=(14, 6), gridspec_kw={"width_ratios": [2, 1]})
         fig.subplots_adjust(top=0.8, wspace=0.5)  # Increase space between subplots
@@ -212,7 +247,7 @@ for forecast_year in config['fcy']:
 
         # Customize boxplot
         ax_box.boxplot([hindcast_anomaly_basinmean, forecast_anomaly_basinmean], 
-                    labels=["Reference\n1993-2016", "Forecast\n2024/2025"], 
+                    labels=[f"Reference\n1993-2016", f"Forecast\n{forecast_year}/{forecast_year +1}"], 
                     widths=0.4,
                     patch_artist=True,
                     boxprops=dict(facecolor="lightblue", color="darkblue"),
@@ -226,7 +261,7 @@ for forecast_year in config['fcy']:
         # Table displaying statistics next to the boxplot
         ax_table.axis("off")  # Turn off axis
         table = ax_table.table(cellText=stats_df.values, 
-                            colLabels=['Reference\n1993-2016', 'Forecast\n2024/2025'], 
+                            colLabels=[f'Reference\n1993-2016', f'Forecast\n{forecast_year}/{forecast_year + 1}'], 
                             rowLabels=stats_df.index, 
                             cellLoc="center", 
                             loc="center",
@@ -247,7 +282,7 @@ for forecast_year in config['fcy']:
 
         # Save the plot with the table
         output_results = '/sclim/cly/basins/results-basins/'
-        output_file = f'HindcastForecast_basin_{i}_ECWMF_SEAS5_NDJFM_{anho}.png'
+        output_file = f'HindcastForecast_basin_{i}_ECWMF_SEAS5_NDJFM_{forecast_year}.png'
         plt.savefig(f"{output_results}{output_file}", dpi=300, bbox_inches="tight")
         plt.close()
 
