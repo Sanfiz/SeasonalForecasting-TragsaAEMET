@@ -46,7 +46,7 @@ print('STEP1. Define main characteristics of the input data')
 institution = 'ECWMF'
 name = 'SEAS5'
 startmonth = 11
-year=[2023,2024]
+year=[2022,2023,2024]
 origin_labels = {'institution': institution, 'name': name}
 model = 'ecmwf'
 system = '51'
@@ -127,11 +127,11 @@ for forecast_year in config['fcy']:
 
     hcst['tprate'] = xr.concat(
         [convert_to_monthly_precipitation(hcst['tprate'].sel(forecastMonth=m), m + 11 if m == 1 else m + 1) 
-        for m in range(1, 6)], dim="forecastMonth")
+        for m in range(2, 6)], dim="forecastMonth")
 
     fcst['tprate'] = xr.concat(
         [convert_to_monthly_precipitation(fcst['tprate'].sel(forecastMonth=m), m + 11 if m == 1 else m + 1) 
-        for m in range(1, 6)], dim="forecastMonth")
+        for m in range(2, 6)], dim="forecastMonth")
 
     # hcst-Dimensions: (number: 25, forecastMonth: 6, start_date: 24, lat: 46, lon: 91)
     # fcst-Dimensions: (number: 51, forecastMonth: 6, lat: 180, lon: 360)
@@ -181,8 +181,16 @@ for forecast_year in config['fcy']:
             hcst_values = np.array(hcst_values)
             fcst_values = np.array(fcst_values) 
 
-            # Calculate the mean of the hindcast in dimension 600
+            # Calculate the mean and std deviation for normalization
             hindcast_mean = hcst_values.mean(axis=1, keepdims=True)  # Shape: (points in basin, 1)
+            hindcast_std = hcst_values.std(axis=1, keepdims=True)    # Shape: (points in basin, 1)
+        
+            forecast_mean = fcst_values.mean(axis=1, keepdims=True)  # Shape: (points in basin, 1)
+            forecast_std = fcst_values.std(axis=1, keepdims=True)    # Shape: (points in basin, 1)
+
+            # Normalize hcst_values and fcst_values
+            hcst_normalized = (hcst_values - hindcast_mean) / hindcast_std
+            fcst_normalized = (fcst_values - forecast_mean) / forecast_std
 
             # Relative anomaly
             hindcast_anomaly = (hcst_values - hindcast_mean) / hindcast_mean * 100
@@ -246,9 +254,11 @@ for forecast_year in config['fcy']:
                     medianprops=dict(color="orange", linewidth=1.5),
                     whiskerprops=dict(color="darkblue"),
                     capprops=dict(color="darkblue"),
-                    flierprops=dict(marker="o", color="darkblue", markersize=5))
+                    flierprops=dict(marker="o", color="darkblue", markersize=5),
+                    showfliers=False 
+        )
         ax_box.set_ylabel("Precipitation Anomaly (%)", fontsize=12)
-        ax_box.set_xlabel("Period", fontsize=12)
+        #ax_box.set_xlabel("Period", fontsize=12)
 
         # Table displaying statistics next to the boxplot
         ax_table.axis("off")  # Turn off axis
@@ -274,7 +284,7 @@ for forecast_year in config['fcy']:
 
         # Save the plot with the table
         output_results = '/sclim/cly/basins/results-basins/'
-        output_file = f'HindcastForecast_basin_{i}_ECWMF_SEAS5_NDJFM_{forecast_year}.png'
+        output_file = f'HindcastForecast_basin_{i}_ECWMF_SEAS5_NDJFM_{forecast_year}_noflies.png'
         plt.savefig(f"{output_results}{output_file}", dpi=300, bbox_inches="tight")
         plt.close()
 
