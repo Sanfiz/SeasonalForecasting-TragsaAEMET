@@ -16,4 +16,4 @@ The following datasets are used in this project:
 
 ### 3. References
 
-Some of these scripts are based on the ECMWF Jupyter Notebook, which is available [here](https://ecmwf-projects.github.io/copernicus-training-c3s/sf-verification.html), and on the repository by the author [mSenande](https://github.com/mSenande/).
+Some of these scripts are based on the ECMWF Jupyter Notebook, which is available [here](https://ecmwf-projects.github.io/copernicus-training-c3s/sf-verification.html), and on the repository by the author Martín Senande Rivera available here: [mSenande](https://github.com/mSenande/).
