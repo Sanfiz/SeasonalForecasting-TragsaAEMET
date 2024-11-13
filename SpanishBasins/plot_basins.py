@@ -12,7 +12,8 @@ import pandas as pd
 # Paths
 shapefile_path = '/sclim/cly/basins/data-basins'
 masivo_path = '/MASIVO/cly'
-results_path = '/sclim/cly/basins/results-basins'
+results_path = '/sclim/cly/basins/results-basins/coord-trim'
+results_path_csv= '/sclim/cly/basins/results-basins/coord-trim/csv-files'
 
 # Load shapefile for basins
 shapefile_basins = 'DemarcacionesHidrograficasPHC2015_2021.shp'
@@ -97,6 +98,12 @@ for grib_info in grib_files:
 
         # Create DataFrame
         df = pd.DataFrame(points_within_basin)
+
+        # save dataframe in csv
+        output_csv = os.path.join(results_path_csv, f'grid_points_within_{basin.name}_{grib_info["resolution"]}.csv')
+        df.to_csv(output_csv, index=False)
+        df_without_basin_name = df.drop(columns=['basin_name']) ## DUDA: esto para que era?
+
 
         # Plotting
         fig, ax_map = plt.subplots(figsize=(12, 8))
