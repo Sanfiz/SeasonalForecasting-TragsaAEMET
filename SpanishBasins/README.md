@@ -1,5 +1,7 @@
 # Project Documentation
 
+---
+
 ### 1. Datasets
 
 The following datasets are employed:
@@ -26,16 +28,16 @@ The following datasets are employed:
   - Processes seasonal forecast and hindcast data to calculate and visualize precipitation anomalies for Spanish river basins during the extended winter season.
 
 - **`boxplot_NDJFM.py`**  
-  - Generates boxplots specific to Spanish river basins for the November–March (NDJFM) season, highlighting seasonal precipitation trends.
+  - Generates boxplots specific to Spanish river basin districts for the November–March (NDJFM) season, highlighting seasonal precipitation trends.
 
 - **`subplot_basins.py`**  
-  - Creates subplot visualizations for comparing various Spanish river basins based on precipitation and other hydrological indicators.
+  - Creates subplot visualizations to compare the Spanish river basin districts based on precipitation and other hydrological indicators.
 
 ---
 
 ### 3. References
 
-This project is based on:
+This project was developed based on the previous work:
 
 1. **ECMWF Jupyter Notebook**  
    - Learn more: [ECMWF Seasonal Forecast Verification](https://ecmwf-projects.github.io/copernicus-training-c3s/sf-verification.html).
