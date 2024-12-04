@@ -9,7 +9,7 @@ The following datasets are employed in this project:
 1.2 **Spanish River Basin Districts**: Provided by the Ministry for the Ecological Transition and the Demographic Challenge (MITECO). Visit the [MITECO website](https://www.miteco.gob.es/en/cartografia-y-sig/ide/descargas/agua/demarcaciones-hidrograficas-phc-2015-2021.html) to download the data.
 
 ### 2. Scripts
-
+- **remapbil.py**: Interpolates horizontal to decrease reloution form 1º to 0.25º in our region.
 - **BoxPlot_HindcastForecast.py**: Processes forecast and hindcast data to calculate and visualise precipitation anomalies for Spanish basins during the extended winter season.
 - **boxplot_NDJFM.py**: Generates boxplots specific to Spanish basins' November to March (NDJFM) season.
 - **subplot_basins.py**: Creates subplots to visualise various Spanish river basins.
