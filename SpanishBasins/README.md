@@ -19,20 +19,16 @@
 ### 2. Scripts
 
 
-- **`remapbil.py`**  
-  - Interpolates horizontal data to decrease resolution from 1º to 0.25º over the target region using CDO tools.
+- **`remapbil.py`** Interpolates horizontal data to decrease resolution from 1º to 0.25º over the target region using CDO tools.
 
-- **`BoxPlot_HindcastForecast.py`**  
-  - Processes seasonal forecast and hindcast data to calculate and visualize precipitation anomalies for Spanish river basins during the extended winter season.
+- **`BoxPlot_HindcastForecast.py`** Processes seasonal forecast and hindcast data to calculate and visualize precipitation anomalies for Spanish river basins during the extended winter season.
 
-- **`boxplot_NDJFM.py`**  
-  - Generates boxplots specific to Spanish river basin districts for the November–March (NDJFM) season, highlighting seasonal precipitation trends.
+- **`boxplot_NDJFM.py`** Generates boxplots specific to Spanish river basin districts for the November–March (NDJFM) season, highlighting seasonal precipitation trends.
 
-- **`subplot_basins.py`**  
-  - Creates subplot visualizations to compare the Spanish river basin districts based on precipitation and other hydrological indicators.
+- **`subplot_basins.py`**  Creates subplot visualisations to compare the Spanish river basin districts based on precipitation and other hydrological indicators.
 
 ---
 
 ### 3. References
 
-This project was developed based on the previous work  **ECMWF Jupyter Notebook**  [ECMWF Seasonal Forecast Verification](https://ecmwf-projects.github.io/copernicus-training-c3s/sf-verification.html) and  **GitHub Repository by Martín Senande Rivera**  original repository: [mSenande](https://github.com/mSenande/).
+This project was developed based on the previous work  **ECMWF Jupyter Notebook**  [ECMWF Seasonal Forecast Verification](https://ecmwf-projects.github.io/copernicus-training-c3s/sf-verification.html) and  **GitHub Repository by Martín Senande Rivera**  [mSenande](https://github.com/mSenande/).
