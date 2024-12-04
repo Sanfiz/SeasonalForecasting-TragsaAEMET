@@ -35,10 +35,4 @@
 
 ### 3. References
 
-This project was developed based on the previous work:
-
-1. **ECMWF Jupyter Notebook**  
-   - Learn more: [ECMWF Seasonal Forecast Verification](https://ecmwf-projects.github.io/copernicus-training-c3s/sf-verification.html).
-
-2. **GitHub Repository by Martín Senande Rivera**  
-   - Original repository: [mSenande](https://github.com/mSenande/).
+This project was developed based on the previous work  **ECMWF Jupyter Notebook**  [ECMWF Seasonal Forecast Verification](https://ecmwf-projects.github.io/copernicus-training-c3s/sf-verification.html) and  **GitHub Repository by Martín Senande Rivera**  original repository: [mSenande](https://github.com/mSenande/).
