@@ -1,19 +1,57 @@
 # Project Documentation
 
+This repository contains tools and datasets for analyzing and visualizing climate-related data, with a focus on Spanish river basins.
+
+---
+
 ### 1. Datasets
 
-The following datasets are employed in this project:
+The following datasets are utilized in this project:
 
-1.1 **Climate Data Store (CDS)**: Provided by the ECMWF (European Centre for Medium-Range Weather Forecasts), including seasonal forecasting and hindcast models. Available here: [Copernicus CDS website](https://cds.climate.copernicus.eu/).
+1. **Climate Data Store (CDS)**  
+   - Provided by the European Centre for Medium-Range Weather Forecasts (ECMWF).  
+   - Includes seasonal forecasting and hindcast models.  
+   - Access the data: [Copernicus CDS website](https://cds.climate.copernicus.eu/).
 
-1.2 **Spanish River Basin Districts**: Provided by the Ministry for the Ecological Transition and the Demographic Challenge (MITECO). Visit the [MITECO website](https://www.miteco.gob.es/en/cartografia-y-sig/ide/descargas/agua/demarcaciones-hidrograficas-phc-2015-2021.html) to download the data.
+2. **Spanish River Basin Districts**  
+   - Provided by the Ministry for the Ecological Transition and the Demographic Challenge (MITECO).  
+   - Includes shapefiles and metadata for Spanish river basins.  
+   - Download here: [MITECO website](https://www.miteco.gob.es/en/cartografia-y-sig/ide/descargas/agua/demarcaciones-hidrograficas-phc-2015-2021.html).
+
+---
 
 ### 2. Scripts
-- **remapbil.py**: Interpolates horizontal to decrease reloution form 1º to 0.25º in our region.
-- **BoxPlot_HindcastForecast.py**: Processes forecast and hindcast data to calculate and visualise precipitation anomalies for Spanish basins during the extended winter season.
-- **boxplot_NDJFM.py**: Generates boxplots specific to Spanish basins' November to March (NDJFM) season.
-- **subplot_basins.py**: Creates subplots to visualise various Spanish river basins.
+
+This repository includes the following Python scripts:
+
+- **`remapbil.py`**  
+  - Interpolates horizontal data to decrease resolution from 1º to 0.25º over the target region using CDO tools.
+
+- **`BoxPlot_HindcastForecast.py`**  
+  - Processes seasonal forecast and hindcast data to calculate and visualize precipitation anomalies for Spanish river basins during the extended winter season.
+
+- **`boxplot_NDJFM.py`**  
+  - Generates boxplots specific to Spanish river basins for the November–March (NDJFM) season, highlighting seasonal precipitation trends.
+
+- **`subplot_basins.py`**  
+  - Creates subplot visualizations for comparing various Spanish river basins based on precipitation and other hydrological indicators.
+
+---
 
 ### 3. References
 
-Some of these scripts are based on the ECMWF Jupyter Notebook, available [here](https://ecmwf-projects.github.io/copernicus-training-c3s/sf-verification.html), and on the repository by the author Martín Senande Rivera, available here: [mSenande](https://github.com/mSenande/).
+This project builds on resources and methodologies from the following:
+
+1. **ECMWF Jupyter Notebook**  
+   - Learn more: [ECMWF Seasonal Forecast Verification](https://ecmwf-projects.github.io/copernicus-training-c3s/sf-verification.html).
+
+2. **GitHub Repository by Martín Senande Rivera**  
+   - Original repository: [mSenande](https://github.com/mSenande/).
+
+---
+
+### 4. How to Use
+
+1. Clone this repository:  
+   ```bash
+   git clone https://gitlab.com/your-repo.git
