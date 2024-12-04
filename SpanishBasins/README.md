@@ -4,8 +4,6 @@
 
 ### 1. Datasets
 
-The following datasets are employed:
-
 1. **Climate Data Store (CDS)**  
    - Provided by the European Centre for Medium-Range Weather Forecasts (ECMWF).  
    - Includes seasonal forecasting and hindcast models.  
@@ -44,11 +42,3 @@ This project was developed based on the previous work:
 
 2. **GitHub Repository by Martín Senande Rivera**  
    - Original repository: [mSenande](https://github.com/mSenande/).
-
----
-
-### 4. How to Use
-
-1. Clone this repository:  
-   ```bash
-   git clone https://gitlab.com/your-repo.git
