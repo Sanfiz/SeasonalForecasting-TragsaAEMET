@@ -19,7 +19,7 @@
 ### 2. Scripts
 
 
-- **`remapbil.py`** Interpolates horizontal data to decrease resolution from 1º to 0.25º over the target region using CDO tools.
+- **`remapbil.py`** Interpolates horizontal data to decrease resolution from 1º to 0.25º over the target region.
 
 - **`BoxPlot_HindcastForecast.py`** Processes seasonal forecast and hindcast data to calculate and visualize precipitation anomalies for Spanish river basins during the extended winter season.
 
