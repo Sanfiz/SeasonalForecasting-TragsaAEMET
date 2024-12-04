@@ -13,7 +13,7 @@ The following datasets are employed:
 
 2. **Spanish River Basin Districts**  
    - Provided by the Ministry for the Ecological Transition and the Demographic Challenge (MITECO).  
-   - Includes shapefiles and metadata for Spanish river basins.  
+   - Includes shapefiles for Spanish river basin districts.  
    - Download here: [MITECO website](https://www.miteco.gob.es/en/cartografia-y-sig/ide/descargas/agua/demarcaciones-hidrograficas-phc-2015-2021.html).
 
 ---
