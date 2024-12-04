@@ -1,17 +1,13 @@
 # Project Documentation
 
-This repository contains tools and datasets for analyzing and visualizing climate-related data, with a focus on Spanish river basins.
-
----
-
 ### 1. Datasets
 
-The following datasets are utilized in this project:
+The following datasets are employed:
 
 1. **Climate Data Store (CDS)**  
    - Provided by the European Centre for Medium-Range Weather Forecasts (ECMWF).  
    - Includes seasonal forecasting and hindcast models.  
-   - Access the data: [Copernicus CDS website](https://cds.climate.copernicus.eu/).
+   - Access to the data: [Copernicus CDS website](https://cds.climate.copernicus.eu/).
 
 2. **Spanish River Basin Districts**  
    - Provided by the Ministry for the Ecological Transition and the Demographic Challenge (MITECO).  
@@ -22,7 +18,6 @@ The following datasets are utilized in this project:
 
 ### 2. Scripts
 
-This repository includes the following Python scripts:
 
 - **`remapbil.py`**  
   - Interpolates horizontal data to decrease resolution from 1º to 0.25º over the target region using CDO tools.
@@ -40,7 +35,7 @@ This repository includes the following Python scripts:
 
 ### 3. References
 
-This project builds on resources and methodologies from the following:
+This project is based on:
 
 1. **ECMWF Jupyter Notebook**  
    - Learn more: [ECMWF Seasonal Forecast Verification](https://ecmwf-projects.github.io/copernicus-training-c3s/sf-verification.html).
